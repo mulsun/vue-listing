@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css" media="screen">
+	* {box-sizing: border-box;}
+	body {
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	}
+	.box {
+		margin: 48px auto;
+		max-width: 1024px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  /*
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  */
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+
+	.box h1 {
+		font-size: 1.1rem;
+		color: #41f;
+		margin: 0;
+	}
+	.box > div {
+		flex: 1 0 25%;
+		padding: 24px;
+		margin: 12px;
+		min-height: 100px;
+		border-radius: 2px;
+		font-size: 1.15rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.box > div:nth-child(1n)
+	{background-color: #ffb3ba;}
+	.box > div:nth-child(2n)
+	{background-color: #ffdfba;}
+	.box > div:nth-child(3n)
+	{background-color: #ffffba;}
+	.box > div:nth-child(4n)
+	{background-color: #baffc9;}
+	.box > div:nth-child(5n)
+	{background-color: #bae1ff;}
+
+.tour-list.box {
+ align-items: flex-start;
+}
+</style>
+</head>
+<body>
+	<div id="root">
+		<cities></cities>
+	</div>
+
+	<script src="vue.js"></script>
+ <script src="vue-router.js"></script>
+	<script src="main.js"></script>
+</body>
+</html>
