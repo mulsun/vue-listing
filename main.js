@@ -108,7 +108,8 @@ const router = new VueRouter({
     { 
     path: '/city/:city.name',
     component: root,
-    mode: 'history' }
+    mode: 'history' 
+   }
   ]
 })
 
