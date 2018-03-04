@@ -23,6 +23,7 @@ const tourList = [
 // Navigation
 const City = {
  name: 'City',
+ props: ['city'],
  template: `
  <div class="navbar-start">
  <router-link 
@@ -36,10 +37,15 @@ const City = {
  </router-link>
  </div>`,
 
- data() { return { cityList: cityList }},
+ data() { return { 
+  cityList: cityList
+   }},
 
  methods: {
-  select(city) {this.selectedCity = city},
+  select(city) {
+   this.selectedCity = { id: city.id, name: city.name }
+   console.log(this.selectedCity)
+  },
  }
 }
 
@@ -48,14 +54,14 @@ Vue.component('city', City)
 // Tours
 const Tours = {
  name: 'tours',
- props: ['city', 'tour'],
  components: {'city': City},
+ props: ['city'],
  template: `
  <div class='container'>
  <transition-group name='slide-fade' tag='div' class='tour-list box columns'>
  <div v-for='tour in selectedTours' :key='tour.id' :class="['column tour-' + tour.id]">
  <h2 class="title is-4">{{ tour.name }}</h2>
- <img :src="['http://loremflickr.com/g/620/240/' + selectedCity.id]">
+ <img :src="['https://picsum.photos/600/300/?image=' + selectedCity.id * 99]">
  <p>{{ tour.text }}</p>
  </div>
  </transition-group>
@@ -72,14 +78,18 @@ const Tours = {
 
  computed:{
   selectedTours(){
-   this.cityList.filter(x=>x.name == this.$route.params.slug)
-   return this.tourList.filter(tour=>tour.cid == this.$route.params.cityID)
+   var routeParam = this.$route.params.slug
+   filterSlug = this.cityList.filter(city=>city.name == routeParam)
+   if (routeParam) {
+    return this.tourList.filter(tour=>tour.cid == filterSlug[0].id)
+   }
+   else {
+    return this.tourList.filter(tour=>tour.cid == '1')
+   }
   }
  },
 
  methods: {
-  select(city) {this.selectedCity = city},
-
   fetchData() {
    fetch('https://jsonplaceholder.typicode.com/posts?userID='+ this.$route.params.cityID)
    .then((response) => {
@@ -102,25 +112,9 @@ const Tours = {
   },
  },
 
- created() {
-  // this.fetchData()
- },
-
- beforeUpdate() {
-  //var result  = this.cityList.filter(o=> o.id == this.$route.params.cityID)
-  // console.log(result[0])
-  // this.$set(this.selectedCity, 'name', result[0])
-
-  //var rid = this.$route.params.cityID
-  //this.selectedCity = this.cityList.filter(function (o) {
-  //return o.id.match(rid)
-  // })
-
- },
-
  mounted () {
-  this.selectedCity = { id: this.$route.params.cityID }
-  console.log(this.selectedCity.id)
+  this.selectedCity = { name: this.$route.params.slug }
+  console.log(this.selectedCity)
  },
 
  watch: {
@@ -142,7 +136,7 @@ const router = new VueRouter({
  mode: 'history',
  routes: [
  { 
-  path: '/:cityID', 
+  path: '/:slug', 
   component: Tours, 
   name: 'toTour',
  }
