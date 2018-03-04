@@ -131,7 +131,7 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { 
-     path: ':cityID', 
+     path: '/:cityID', 
      component: Cities, 
      params: true,
      name: 'toTour',
