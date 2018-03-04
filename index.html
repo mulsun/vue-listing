@@ -6,11 +6,11 @@
 	<title>Document</title>
  <link href="css/bulma.min.css" rel="stylesheet" type="text/css" />
 	<style type="text/css" media="screen">
- body {margin-top: 64px}
 
 .slide-fade-enter-active {
   transition: all .5s ease-in;
 }
+
 .slide-fade-leave-active {
   transition: all .5s ease-out;
   position: absolute;
@@ -21,40 +21,39 @@
   opacity: 0;
 }
 
-h2 {
- font-size: 1.25rem;
- font-weight: 700;
-}
-
-	.city-list > div:nth-child(1n)
-	{background-color: #ffb3ba;}
-	.city-list > div:nth-child(2n)
-	{background-color: #ffdfba;}
-	.city-list > div:nth-child(3n)
-	{background-color: #ffffba;}
-	.city-list > div:nth-child(4n)
-	{background-color: #baffc9;}
-	.city-list > div:nth-child(5n)
-	{background-color: #bae1ff;}
-
- .tour-list {
-  margin-top: 24px;
-  min-height: 200px;
-  overflow: hidden;
+ .container {
+  margin-top: 128px;
  }
 </style>
 </head>
 
 <body>
-	<div id="app">
+
+<div id="app">
+
+<nav class="navbar is-fixed-top is-info" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/"><strong>Vue Tours</strong></a>
+    <div class="navbar-burger burger" data-target="navMenuColorwhite-example"><span></span><span></span><span></span></div>
+  </div>
+
+  <div id="navMenuColorwhite-example" class="navbar-menu">
+     <city></city>
+     <div class="navbar-end"><a class="navbar-item" href="/">@mulsun</a></div>
+  </div>
+</nav>
+
+
+<div class='container'>
 		<cities></cities>
   <router-view name="toTour"></router-view>
-	</div>
- 
+ </div>
+
+	</div><!-- app -->
+
 	<script src="js/vue.js"></script>
  <script src="js/vue-router.js"></script>
-	<script type="module" src="js/main.js"></script>
- 
+	<script src="js/main.js"></script>
  <!-- for github pages -->
  <script src="https://websemantics.github.io/gh-pages-spa/ghspa.js"></script>
 </body>
