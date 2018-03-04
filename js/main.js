@@ -33,7 +33,7 @@ Vue.component('cities', {
    <transition name='slide-fade'>
    <div :class="['column tour-' + tour.id]">
    <h2>{{ tour.name }}</h2>
-   <img :src="['http://loremflickr.com/g/620/240/' + city.id]">
+   <img :src="['http://loremflickr.com/g/620/240/' + city.name]">
    <p>{{ tour.text }}</p>
    </div>
    </transition>
@@ -63,39 +63,31 @@ Vue.component('cities', {
    {id:8, cid: 3, name: 'Barça Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
    {id:9, cid: 4, name: 'Rome Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
    {id:10, cid: 5, name: 'Mars Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
-   ]
+   ],
+   bs : []
   }
  },
 
  computed:{
   selectedTours(){
+   var result  = this.cityList.filter(o=> o.name == this.$route.params.slug)
+   console.log(result[0])
    return this.tourList.filter(tour=>tour.cid == this.$route.params.cityID)
    // return this.tourList.filter(tour=>tour.cid == this.selectedCity.id)
   }
  },
 
-mounted: function () {
-     this.selectedCity = { id: this.$route.params.cityID }
-     console.log('selected city:'+this.selectedCity.id)
-     console.log(this.$route.path)
-     console.log(this.$route.params)
-},
-  
-  watch: {
-    // '$route': 'fetchData',
-    '$route' (to, from) {
-     console.log(this.$route.params)
-    }
-  },
-
  methods: {
   select(city) {
    this.selectedCity = city
-   // this.fetchData()
   },
 
+getByValue(arr, value) {
+  var result  = arr.filter(function(o){return o.b == value;} );
+  return result? result[0] : null; // or undefined
+},
   fetchData() {
-   fetch('https://jsonplaceholder.typicode.com/posts?userID='+ this.selectedCity.id)
+   fetch('https://jsonplaceholder.typicode.com/posts?userID='+ this.$route.params.cityID)
    .then((response) => {
     if(response.ok) {
      return response.json()
@@ -104,8 +96,8 @@ mounted: function () {
    })
    .then((json) => {
     this.tourList.push({
-     id: json.id,
-     cid: json.userId,
+     cid: json.id,
+     id: json.userId,
      name: json.title,
      text: json.body
     })
@@ -115,6 +107,25 @@ mounted: function () {
    })
   },
  },
+
+ created () {
+  // this.fetchData()
+ },
+
+ mounted: function () {
+  this.selectedCity = { id: this.$route.params.cityID }
+  console.log('selected city:'+this.selectedCity.id)
+  console.log(this.$route.path)
+  console.log(this.$route.params)
+ },
+
+ watch: {
+  '$route' (to, from) {
+   console.log(this.$route.params)
+   // this.fetchData()
+  }
+ },
+
 
 })
 
