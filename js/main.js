@@ -1,21 +1,28 @@
-const Tour = {
- name: 'Tour',
- props: ['city', 'tour'],
- template: `
- <transition name='slide-fade'>
- <div :class="['column tour-' + tour.id]">
- <h2 class="title is-4">{{ tour.name }}</h2>
- <img :src="['http://loremflickr.com/g/620/240/' + city.name]">
- <p>{{ tour.text }}</p>
- </div>
- </transition>
- `,
-}
+// Data 
+const cityList = [
+{id:1, name: 'istanbul'},
+{id:2, name: 'paris'},
+{id:3, name: 'barca'},
+{id:4, name: 'rome'},
+{id:5, name: 'mars'}
+]
+
+const tourList = [
+{id:1, cid: 1, name: 'Istanbul Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:2, cid: 2, name: 'Paris Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:3, cid: 3, name: 'Barça Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:4, cid: 4, name: 'Rome Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:5, cid: 5, name: 'Mars Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:6, cid: 1, name: 'Istanbul Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:7, cid: 2, name: 'Paris Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:8, cid: 3, name: 'Barça Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:9, cid: 4, name: 'Rome Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
+{id:10, cid: 5, name: 'Mars Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
+]
 
 // Navigation
 const City = {
  name: 'City',
- props: ['city'],
  template: `
  <div class="navbar-start">
  <router-link 
@@ -28,54 +35,45 @@ const City = {
  {{ city.name | capitalize }}
  </router-link>
  </div>`,
- data() {
-  return {
-   cityList: [
-   {id:1, name: 'istanbul'},
-   {id:2, name: 'paris'},
-   {id:3, name: 'barca'},
-   {id:4, name: 'rome'},
-   {id:5, name: 'mars'}
-   ],
-  }
- },
+
+ data() { return { cityList: cityList }},
+
  methods: {
   select(city) {this.selectedCity = city},
  }
 }
 
-const Cities = {
- name: 'cities',
- components: {'tour': Tour, 'city': City},
+Vue.component('city', City)
+
+// Tours
+const Tours = {
+ name: 'tours',
+ props: ['city', 'tour'],
+ components: {'city': City},
  template: `
  <div class='container'>
- <div class='tour-list box columns'>
- <tour v-for='tour in selectedTours' :city="selectedCity" :tour='tour' :key='tour.id'></tour>
+ <transition-group name='slide-fade' tag='div' class='tour-list box columns'>
+ <div v-for='tour in selectedTours' :key='tour.id' :class="['column tour-' + tour.id]">
+ <h2 class="title is-4">{{ tour.name }}</h2>
+ <img :src="['http://loremflickr.com/g/620/240/' + selectedCity.id]">
+ <p>{{ tour.text }}</p>
  </div>
+ </transition-group>
  </div>
  `,
- data() {
-  return {
+
+ data() { 
+  return { 
    selectedCity: '',
-   tourList: [
-   {id:1, cid: 1, name: 'Istanbul Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:2, cid: 2, name: 'Paris Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:3, cid: 3, name: 'Barça Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:4, cid: 4, name: 'Rome Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:5, cid: 5, name: 'Mars Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:6, cid: 1, name: 'Istanbul Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:7, cid: 2, name: 'Paris Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:8, cid: 3, name: 'Barça Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:9, cid: 4, name: 'Rome Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
-   {id:10, cid: 5, name: 'Mars Tour 2', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
-   ],
+   cityList: cityList,
+   tourList: tourList,
   }
  },
 
  computed:{
   selectedTours(){
+   this.cityList.filter(x=>x.name == this.$route.params.slug)
    return this.tourList.filter(tour=>tour.cid == this.$route.params.cityID)
-   // return this.tourList.filter(tour=>tour.cid == this.selectedCity.id)
   }
  },
 
@@ -122,7 +120,7 @@ const Cities = {
 
  mounted () {
   this.selectedCity = { id: this.$route.params.cityID }
-  console.log('selected city:'+this.selectedCity.id)
+  console.log(this.selectedCity.id)
  },
 
  watch: {
@@ -132,8 +130,7 @@ const Cities = {
  },
 }
 
-Vue.component('cities', Cities)
-Vue.component('city', City)
+Vue.component('tours', Tours)
 
 Vue.filter('capitalize', function (value) {
  if (!value) return ''
@@ -146,7 +143,7 @@ const router = new VueRouter({
  routes: [
  { 
   path: '/:cityID', 
-  component: Tour, 
+  component: Tours, 
   name: 'toTour',
  }
  ]
@@ -167,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Add a click event on each of them
     $navbarBurgers.forEach(function ($el) {
-      $el.addEventListener('click', function () {
+     $el.addEventListener('click', function () {
 
         // Get the target from the "data-target" attribute
         var target = $el.dataset.target;
@@ -177,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
         $el.classList.toggle('is-active');
         $target.classList.toggle('is-active');
 
-      });
+       });
     });
-  }
+   }
 
-});
+  });
