@@ -62,7 +62,7 @@ const Tours = {
  <transition-group name='slide-fade' tag='div' class='tour-list box columns'>
  <div v-for='tour in selectedTours' :key='tour.id' :class="['column tour-' + tour.id]">
  <h2 class="title is-4">{{ tour.name }}</h2>
- <img :src="['https://picsum.photos/600/300/?image=' + selectedCity.id * 100]">
+ <img :src="['https://picsum.photos/600/300/?image=' + selectedCity.id * 90]">
  <p>{{ tour.text }}</p>
  </div>
  </transition-group>
@@ -77,14 +77,27 @@ const Tours = {
   }
  },
 
+  mounted () {
+   var routeParam = this.$route.params.slug
+   filterSlug = this.cityList.filter(city=>city.name == routeParam)
+   if (routeParam) {
+    this.selectedCity = filterSlug[0]
+   }
+   else {
+    this.selectedCity = { id: '1', name: 'istanbul' }
+   }
+  console.log(this.selectedCity)
+ },
+
  computed:{
   selectedTours(){
    var routeParam = this.$route.params.slug
    filterSlug = this.cityList.filter(city=>city.name == routeParam)
    if (routeParam) {
-    this.selectedCity = { id: filterSlug[0].id, name: filterSlug[0].name }
+    this.selectedCity = filterSlug[0]
     return this.tourList.filter(tour=>tour.cid == filterSlug[0].id)
    }
+   // if no slug - index
    else {
     return this.tourList.filter(tour=>tour.cid == '1')
    }
@@ -112,13 +125,6 @@ const Tours = {
     console.log(error)
    })
   },
- },
-
- mounted () {
-  var routeParam = this.$route.params.slug
-  filterSlug = this.cityList.filter(city=>city.name == routeParam)
-  this.selectedCity = { id: filterSlug[0].id, name: filterSlug[0].name }
-  console.log(this.selectedCity)
  },
 
  watch: {
