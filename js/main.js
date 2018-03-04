@@ -30,7 +30,6 @@ const City = {
  </div>`,
  data() {
   return {
-   selectedCity: '',
    cityList: [
    {id:1, name: 'istanbul'},
    {id:2, name: 'paris'},
@@ -58,7 +57,6 @@ const Cities = {
  data() {
   return {
    selectedCity: '',
-
    tourList: [
    {id:1, cid: 1, name: 'Istanbul Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
    {id:2, cid: 2, name: 'Paris Tour 1', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'},
